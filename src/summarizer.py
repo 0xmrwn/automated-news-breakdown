@@ -39,7 +39,7 @@ def summarize_text(text):
     model_engine = "text-davinci-002"
 
     # Set the prompt for the model
-    prompt = f"Summarize the following text in a few words : {text}"
+    prompt = f"Summarize the following text in 4 sentences more or less : {text}"
 
     # Set the number of completions to generate
     num_completions = 1
@@ -48,7 +48,7 @@ def summarize_text(text):
     temperature = 0.1
 
     # Set the max length of the completions
-    max_length = 4096
+    max_length = 250
     params = {
         "model": "text-davinci-003",
         "prompt": "Say this is a test",
@@ -77,8 +77,3 @@ def summarize_text(text):
 
     # Print the completion
     return completion.text
-
-
-response = openai.Completion.create(
-    model="text-davinci-003", prompt="Say this is a test", temperature=0, max_tokens=7
-)
