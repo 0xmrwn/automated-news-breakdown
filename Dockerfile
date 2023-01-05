@@ -9,9 +9,10 @@ RUN pip install --no-cache -r auto_summary/requirements.txt
 SHELL ["/bin/bash", "--login" , "-c"]
 
 # setting work directory
-COPY . robin
-WORKDIR /robin
+COPY . auto_summary
+WORKDIR /auto_summary
 
 
 # launch gunicorn server
-CMD ["gunicorn", "src.auto_summary:app", "--workers=1", "--threads=4", "--bind=:8080", "--timeout=0"]
+EXPOSE 8888
+CMD ["gunicorn", "src.flask_server:app", "--workers=1", "--threads=4", "--bind=:8888", "--timeout=0"]
