@@ -15,4 +15,4 @@ WORKDIR /auto_summary
 
 # launch gunicorn server
 EXPOSE 8888
-CMD ["gunicorn", "src.flask_server:app", "--workers=1", "--threads=4", "--bind=:8888", "--timeout=0"]
+CMD ["gunicorn", "src.flask_server:app", "--workers=1", "--threads=4", "--bind=:8080", "--timeout=0"]

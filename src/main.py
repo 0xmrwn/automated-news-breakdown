@@ -1,46 +1,42 @@
 import datetime
 from os import path
 
+from modules import file_manager as fm
 from modules import interpreter, scraper, translater, visualizer
 
 
 def process_url():
     url = "https://edwardsnowden.substack.com/p/americas-open-wound?utm_source=pocket_saves"
     text = scraper.scrape_article(url)
-
-    # Generate a summary of the article using the context
     title = interpreter.generate_title(text)
     summary = interpreter.summarize_text(text)
     image_prompt = interpreter.generate_prompt(text)
-
     visualizer.generate_image(image_prompt)
     translated_title = translater.translate_to_fr(title)
     translated_text = translater.translate_to_fr(summary)
+    image_abs_path = path.abspath("./output/image.jpeg")
     return str(
         build_article(
             title=translated_title,
             text=translated_text,
-            image_path=path.join(".", "output", "image.jpeg"),
+            image_path=image_abs_path,
+            instructions=image_prompt,
         )
     )
 
 
-def build_article(title, text, image_path):
+def build_article(title, text, image_path, instructions):
     with open(path.join(".", "data", "template.html"), "r") as template_file:
         template = template_file.read()
-    return template.format(title=title, text=text, image=image_path)
+    return template.format(
+        title=title, text=text, image=image_path, prompt=instructions
+    )
 
 
 def create_and_save_html_file(file_name):
     html_content = process_url()
     with open(file_name, "w") as html_file:
         html_file.write(html_content)
-
-
-def create_html_file_name():
-    now = datetime.datetime.now()
-    date_time_str = now.strftime("%Y-%m-%d_%H-%M-%S")
-    return f"./output/summary_{date_time_str}.html"
 
 
 def demo_function():
@@ -66,7 +62,7 @@ def demo_function():
 
 
 def main():
-    file_name = create_html_file_name()
+    file_name = fm.create_file_name(item="summary", file_type="html")
     create_and_save_html_file(file_name)
 
 

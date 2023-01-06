@@ -1,4 +1,5 @@
 import os
+from html import unescape
 
 from google.cloud import translate_v2 as translate
 
@@ -11,5 +12,4 @@ def translate_to_fr(text):
     # Use the translate client to translate the text
     client = translate.Client()
     result = client.translate(text, target_language="fr")
-
-    return result["translatedText"]
+    return unescape(result["translatedText"])
