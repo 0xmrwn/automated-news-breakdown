@@ -7,6 +7,11 @@ from bs4 import BeautifulSoup
 
 
 def scrape_article(url: str):
+    """
+    Scrapes the main content from an HTML article given a URL by searching
+    for specific class names in the page's HTML and removing certain elements
+    from the content. Returns the cleaned up text of the article's main content.
+    """
     try:
         response = requests.get(url)
     except requests.exceptions.RequestException as e:
@@ -27,6 +32,10 @@ def scrape_article(url: str):
 
 
 def clean_text(text):
+    """
+    Cleans up raw text by removing excess whitespace, certain substrings,
+    and HTML tags, and unescaping any HTML character entities.
+    """
     text = text.strip()
     text = re.sub(r"\s+", " ", text)
     text = re.sub(r"TwitterFacebookEmail", "", text)

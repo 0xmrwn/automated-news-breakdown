@@ -1,8 +1,7 @@
 import datetime
 from os import path
 
-from modules import file_manager as fm
-from modules import interpreter, scraper, translater, visualizer
+from modules import interpreter, scraper, translater, utils, visualizer
 
 
 def process_url():
@@ -62,7 +61,7 @@ def demo_function():
 
 
 def main():
-    file_name = fm.create_file_name(item="summary", file_type="html")
+    file_name = utils.create_file_name(item="summary", file_type="html")
     create_and_save_html_file(file_name)
 
 

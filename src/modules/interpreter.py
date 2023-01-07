@@ -28,7 +28,7 @@ def summarize_text(text):
 def generate_prompt(text):
     prompt = f"""Give a creative prompt to be fed to an LLM that generates images.
     Suggest an appropriate art style and general tone of the image. Be safe in your words to avoid triggering
-    any safety blocks from the API.The generated image should serve as an illustration of this article : {text}"""
+    any safety blocks from the API. The generated image should serve as an illustration of this article : {text}"""
     completions = openai.Completion.create(
         engine="text-davinci-003",
         prompt=prompt,
