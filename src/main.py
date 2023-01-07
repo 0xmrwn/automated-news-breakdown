@@ -1,5 +1,6 @@
-import datetime
 from os import path
+
+from dotenv import load_dotenv
 
 from modules import interpreter, scraper, translater, utils, visualizer
 
@@ -61,6 +62,7 @@ def demo_function():
 
 
 def main():
+    load_dotenv()
     file_name = utils.create_file_name(item="summary", file_type="html")
     create_and_save_html_file(file_name)
 

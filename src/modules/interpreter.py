@@ -1,13 +1,10 @@
 import os
 
 import openai
-from dotenv import load_dotenv
-
-load_dotenv()
-openai.api_key = os.environ["OPENAI_API_KEY"]
 
 
 def summarize_text(text):
+    openai.api_key = os.environ["OPENAI_API_KEY"]
     prompt = f"""As a brilliant article reviewer, give a short 
     summary in more or less 200 words and give a honest opinion in 
     one sentence about this article : {text}"""
@@ -26,6 +23,7 @@ def summarize_text(text):
 
 
 def generate_prompt(text):
+    openai.api_key = os.environ["OPENAI_API_KEY"]
     prompt = f"""Give a creative prompt to be fed to an LLM that generates images.
     Suggest an appropriate art style and general tone of the image. Be safe in your words to avoid triggering
     any safety blocks from the API. The generated image should serve as an illustration of this article : {text}"""
@@ -44,6 +42,7 @@ def generate_prompt(text):
 
 
 def generate_title(text):
+    openai.api_key = os.environ["OPENAI_API_KEY"]
     prompt = f"""Think of an interesting title for this article 
     that will captivate readers : {text}"""
     completions = openai.Completion.create(

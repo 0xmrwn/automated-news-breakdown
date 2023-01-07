@@ -1,5 +1,6 @@
 from os import path
 
+from dotenv import load_dotenv
 from flask import Flask, request
 
 from src.modules import interpreter, scraper, translater, visualizer
@@ -9,6 +10,7 @@ app = Flask(__name__)
 
 
 def main():
+    load_dotenv()
     app.run()
 
 

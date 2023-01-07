@@ -3,7 +3,6 @@ import os
 
 import openai
 import requests
-from dotenv import load_dotenv
 
 
 def generate_image(input_text):
@@ -11,7 +10,6 @@ def generate_image(input_text):
     Generates an image based on a given input text using the OpenAI API.
     The generated image is saved to a file in the `output` directory.
     """
-    load_dotenv()
     openai.api_key = os.environ["OPENAI_API_KEY"]
     response = openai.Image.create(prompt=input_text, n=1, size="512x512")
     image_url = response["data"][0]["url"]
