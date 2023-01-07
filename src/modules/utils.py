@@ -21,7 +21,11 @@ def build_article(article_title, article_body, image_url, instructions):
     with open(path.join(".", "data", "template.html"), "r") as template_file:
         template = template_file.read()
     return template.format(
-        title=article_title, text=article_body, url=image_url, prompt=instructions
+        title=article_title,
+        text=article_body,
+        url=image_url,
+        prompt=instructions,
+        image_legend=instructions,
     )
 
 
