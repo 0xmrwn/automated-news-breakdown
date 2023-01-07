@@ -4,6 +4,8 @@ import os
 import openai
 import requests
 
+from src.modules.utils import create_file_name
+
 
 def generate_image(input_text):
     """
@@ -13,16 +15,8 @@ def generate_image(input_text):
     openai.api_key = os.environ["OPENAI_API_KEY"]
     response = openai.Image.create(prompt=input_text, n=1, size="512x512")
     image_url = response["data"][0]["url"]
-    with open(os.path.join(".", "output", "image.jpeg"), "wb") as file:
+    image_file_name = create_file_name(item="image", file_type="jpeg")
+    with open(image_file_name, "wb") as file:
         response = requests.get(image_url)
         file.write(response.content)
-
-
-def encode_image():
-    """
-    Encodes an image file in base64 format. The image file
-    is read from the `output` directory.
-    """
-    with open("./output/image.jpeg", "rb") as f:
-        image_data = f.read()
-        return base64.b64encode(image_data)
+    return image_url

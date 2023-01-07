@@ -26,11 +26,24 @@
       margin: 20px 0;
       text-align: justify;
     }}
+    .container {{
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }}
+    .article-image {{
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }}
   </style>
 </head>
 <body>
-  <h1>{title}</h1>
-  <img src="data:image/jpeg;base64,{base64}" alt="{prompt}">
-  <p>{text}</p>
+  <div class="container">
+    <h1>{title}</h1>
+    <img class="article-image" src="{url}" alt="{prompt}">
+    <p>{text}</p>
+  </div>
 </body>
 </html>

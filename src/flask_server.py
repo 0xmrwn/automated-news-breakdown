@@ -7,10 +7,10 @@ from src.modules import interpreter, scraper, translater, visualizer
 from src.modules.utils import build_article
 
 app = Flask(__name__)
+load_dotenv()
 
 
 def main():
-    load_dotenv()
     app.run()
 
 
@@ -42,16 +42,14 @@ def process_url():
     title = interpreter.generate_title(text)
     summary = interpreter.summarize_text(text)
     image_prompt = interpreter.generate_prompt(text)
-    visualizer.generate_image(image_prompt)
+    image_url = visualizer.generate_image(image_prompt)
     translated_title = translater.translate_to_fr(title)
     translated_text = translater.translate_to_fr(summary)
-    image_abs_path = path.abspath("./output/image.jpeg")
     return str(
         build_article(
-            title=translated_title,
-            text=translated_text,
-            image_path=image_abs_path,
+            article_title=translated_title,
+            article_body=translated_text,
+            image_url=image_url,
             instructions=image_prompt,
-            image=visualizer.encode_image(),
         )
     )
