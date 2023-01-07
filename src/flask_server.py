@@ -1,5 +1,3 @@
-from os import path
-
 from dotenv import load_dotenv
 from flask import Flask, request
 
@@ -43,8 +41,12 @@ def process_url():
     summary = interpreter.summarize_text(text)
     image_prompt = interpreter.generate_prompt(text)
     image_url = visualizer.generate_image(image_prompt)
-    translated_title = translater.translate_to_fr(title)
-    translated_text = translater.translate_to_fr(summary)
+    translated_title = translater.deepl_translate(
+        original_text=title, target="FR", lang_level="more"
+    )
+    translated_text = translater.deepl_translate(
+        original_text=summary, target="FR", lang_level="more"
+    )
     return str(
         build_article(
             article_title=translated_title,

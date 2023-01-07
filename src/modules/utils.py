@@ -1,4 +1,5 @@
 import datetime
+import urllib
 from os import path
 
 
@@ -22,3 +23,13 @@ def build_article(article_title, article_body, image_url, instructions):
     return template.format(
         title=article_title, text=article_body, url=image_url, prompt=instructions
     )
+
+
+def percent_encode(string):
+    """Encode a string using percent-encoding"""
+    return urllib.parse.quote(string)
+
+
+def percent_decode(string):
+    """Decode a string that has been percent-encoded"""
+    return urllib.parse.unquote(string)
