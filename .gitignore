@@ -1,6 +1,8 @@
 # Project specific
 # Ignore all json files
 **/*.json
+# Ignore all notebooks
+**/*.ipynb
 # Ignore output html
 output.html
 

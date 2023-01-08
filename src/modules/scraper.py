@@ -3,9 +3,52 @@ from html import unescape
 
 import requests
 from bs4 import BeautifulSoup
+from goose3 import Goose
+from newspaper import Article
+
+from src.modules.utils import get_config
 
 
 def scrape_article(url: str):
+    parsed_data = parse_url_goose(url)
+    if not len(parsed_data["text"]) or len(parsed_data["text"]) < 100:
+        parsed_data = parse_url_newspaper(url)
+    if not len(parsed_data["text"]) or len(parsed_data["text"]) < 100:
+        parsed_data = manual_scraping(url)
+    return parsed_data["text"]
+
+
+def parse_url_goose(url: str):
+    config = get_config()
+    with Goose(config=config["goose_config"]) as g:
+        article = g.extract(url)
+    return {
+        "title": article.title,
+        "authors": article.authors,
+        "publish_data": article.publish_date,
+        "text": article.cleaned_text,
+        "url": article.final_url,
+        "domain": article.domain,
+        "meta_description": article.meta_description,
+    }
+
+
+def parse_url_newspaper(url: str):
+    article = Article(url)
+    article.download()
+    article.parse()
+    return {
+        "title": article.title,
+        "authors": article.authors,
+        "publish_data": article.publish_date,
+        "text": article.text,
+        "url": url,
+        "domain": None,
+        "meta_description": None,
+    }
+
+
+def manual_scraping(url: str):
     """
     Scrapes the main content from an HTML article given a URL by searching
     for specific class names in the page's HTML and removing certain elements
@@ -27,16 +70,16 @@ def scrape_article(url: str):
     for element in article_content(["aside", "nav"]):
         element.extract()
     raw_text = article_content.get_text().strip()
-    return clean_text(raw_text)
-
-
-def clean_text(text):
-    """
-    Cleans up raw text by removing excess whitespace, certain substrings,
-    and HTML tags, and unescaping any HTML character entities.
-    """
-    text = text.strip()
+    text = raw_text.strip()
     text = re.sub(r"\s+", " ", text)
     text = re.sub(r"TwitterFacebookEmail", "", text)
     text = re.sub(r"<.*?>", "", text)
-    return unescape(text)
+    return {
+        "title": None,
+        "authors": None,
+        "publish_data": None,
+        "text": unescape(text),
+        "url": url,
+        "domain": None,
+        "meta_description": None,
+    }

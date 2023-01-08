@@ -1,5 +1,4 @@
 import datetime
-import urllib
 from os import path
 
 import yaml
@@ -29,16 +28,6 @@ def build_article(article_title, article_body, image_url, instructions):
         prompt=instructions,
         image_legend=instructions,
     )
-
-
-def percent_encode(string):
-    """Encode a string using percent-encoding"""
-    return urllib.parse.quote(string)
-
-
-def percent_decode(string):
-    """Decode a string that has been percent-encoded"""
-    return urllib.parse.unquote(string)
 
 
 def get_config():

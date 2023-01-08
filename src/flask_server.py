@@ -29,13 +29,14 @@ def index():
 def process_url():
     """
     This function is a Flask route that receives a POST request with
-    a URL in the form data. The function uses this URL to scrape an article
-    and then uses the OpenAI API to generate a title, summary, and set of
-    instructions for the article. The generated instructions are used to
-    generate an image with the Visualizer class, and the DeepL API is used
-    to translate the title, summary, and instructions to a target language
-    specified in the configuration. Finally, the function builds and returns
-    an article object with the translated title, summary, image, and instructions.
+    a URL in the form data. The function uses this URL to extract an
+    articleand then uses the OpenAI API to generate a title, summary,
+    and set of instructions for the article. The generated instructions
+    are used to generate an image with DALLE, and the DeepL API is used
+    to translate the title and summary to a target language specified
+    in the configuration. Finally, the function builds and returns
+    an article object with the translated title, summary, image, and
+    instructions.
     """
     # Setting configutation
     config = get_config()

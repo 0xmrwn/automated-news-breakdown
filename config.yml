@@ -4,19 +4,28 @@ translation_target: "FR"
 completions_engine: "text-davinci-003"
 image_size: "512x512"
 
+goose_config:
+  browser_user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2)"
+  enable_image_fetching: False
+  keep_footnotes: True
+  parse_headers: True
+  strict: True
+
+
 prompts:
 
   summarize:
-    prompt: "As a brilliant article reviewer, give a short 
-    summary in more or less 200 words and give a honest opinion in 
-    one sentence about this article : {text}"
+    prompt: "As a brilliant article reviewer, give a short summary 
+    in more or less 200 words and give a honest opinion in one sentence 
+    about this article : {text}"
     max_tokens: 250
     temperature: 0.7
 
   generate_instructions:
     prompt: "Give a creative prompt to be fed to an LLM that generates images.
-    Suggest an appropriate art style and general tone of the image. Be safe in your words to avoid triggering
-    any safety blocks from the API. The generated image should serve as an illustration of this article : {text}"
+    Suggest an appropriate art style and general tone of the image. Be safe in 
+    your words to avoid triggering any safety blocks from the API. The 
+    generated image should serve as an illustration of this article : {text}"
     max_tokens: 100
     temperature: 0.1
 
