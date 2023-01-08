@@ -2,6 +2,8 @@ import datetime
 import urllib
 from os import path
 
+import yaml
+
 
 def create_file_name(item: str, file_type: str):
     """
@@ -37,3 +39,9 @@ def percent_encode(string):
 def percent_decode(string):
     """Decode a string that has been percent-encoded"""
     return urllib.parse.unquote(string)
+
+
+def get_config():
+    """Returns configuration dictionary"""
+    with open(path.join(".", "config.yml"), "r") as f:
+        return yaml.safe_load(f)
