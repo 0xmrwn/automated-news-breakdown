@@ -1,8 +1,6 @@
 version: 1
 
 translation_target: "FR"
-completions_engine: "text-davinci-003"
-image_size: "512x512"
 
 goose_config:
   browser_user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2)"
@@ -11,26 +9,34 @@ goose_config:
   parse_headers: True
   strict: True
 
-
-prompts:
-
-  summarize:
-    prompt: "As a brilliant article reviewer, give a short summary 
-    in more or less 200 words and give a honest opinion in one sentence 
-    about this article : {text}"
-    max_tokens: 250
-    temperature: 0.7
-
-  generate_instructions:
-    prompt: "Give a creative prompt to be fed to an LLM that generates images.
-    Suggest an appropriate art style and general tone of the image. Be safe in 
-    your words to avoid triggering any safety blocks from the API. The 
-    generated image should serve as an illustration of this article : {text}"
-    max_tokens: 100
-    temperature: 0.1
-
-  generate_title:
-    prompt: "Think of an interesting title for this article 
-    that will captivate readers : {text}"
-    max_tokens: 30
-    temperature: 0.7
+openai_config:
+  image_size: "512x512"
+  completions_engine: "text-davinci-003"
+  prompts:
+    summarize:
+      prompt: "As an expert in synthesizing information, summarize the key 
+      points and main arguments made in the following article in 300 words 
+      or less. Additionally, provide an honest evaluation of the article in 
+      one sentence, incorporating any relevant knowledge or insights from your 
+      training data. 
+      Article : {text}"
+      max_tokens: 300
+      temperature: 0.3
+    generate_instructions:
+      prompt: "Write a set of clear and detailed instructions for creating an 
+      illustration for the following article. The instructions should outline 
+      the desired art style, themes, and content of the illustration, and 
+      should include any specific ideas or concepts that should be depicted 
+      in the image. The instructions should also consider the appropriateness 
+      and safety of the content, and should avoid any potentially harmful or 
+      triggering themes or images. The output should not contain text.
+      Article : {text}"
+      max_tokens: 100
+      temperature: 0.1
+    generate_title:
+      prompt: "Generate a catchy and informative title for the following 
+      article, incorporating key themes and ideas from the text. The title should 
+      be concise and attention-grabbing, ideally no more than 10 words in length.
+      Article : {text}"
+      max_tokens: 20
+      temperature: 0.7

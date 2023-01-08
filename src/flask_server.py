@@ -41,46 +41,37 @@ def process_url():
     # Setting configutation
     config = get_config()
     url = request.form["url"]
+    completion_model = config["openai_config"]["completions_engine"]
+    dalle_img_size = config["openai_config"]["image_size"]
+    title_config = config["openai_config"]["prompts"]["generate_title"]
+    summary_config = config["openai_config"]["prompts"]["summarize"]
+    instruction_config = config["openai_config"]["prompts"]["generate_instructions"]
+    language = config["translation_target"]
 
     # Scraping article
     text = scraper.scrape_article(url)
 
     # OpenAI completions
-    completion_model = config["completions_engine"]
-    title_prompt = config["prompts"]["generate_title"]["prompt"]
-    title_temp = config["prompts"]["generate_title"]["temperature"]
-    title_max_t = config["prompts"]["generate_title"]["max_tokens"]
     title = interpreter.get_completion(
         model=completion_model,
         context=text,
-        template_prompt=title_prompt,
-        temp=title_temp,
-        max_t=title_max_t,
+        config=title_config,
     )
-    summary_prompt = config["prompts"]["summarize"]["prompt"]
-    summary_temp = config["prompts"]["summarize"]["temperature"]
-    tsummary_max_t = config["prompts"]["summarize"]["max_tokens"]
     summary = interpreter.get_completion(
         model=completion_model,
         context=text,
-        template_prompt=summary_prompt,
-        temp=summary_temp,
-        max_t=tsummary_max_t,
+        config=summary_config,
     )
-    instruction_prompt = config["prompts"]["generate_instructions"]["prompt"]
-    instruction_temp = config["prompts"]["generate_instructions"]["temperature"]
-    instruction_max_t = config["prompts"]["generate_instructions"]["max_tokens"]
     image_prompt = interpreter.get_completion(
         model=completion_model,
         context=text,
-        template_prompt=instruction_prompt,
-        temp=instruction_temp,
-        max_t=instruction_max_t,
+        config=instruction_config,
     )
-    image_url = visualizer.generate_image(image_prompt)
+    image_url = visualizer.generate_image(
+        input_text=image_prompt, dimensions=dalle_img_size
+    )
 
     # Translation to target language
-    language = config["translation_target"]
     translated_title = translater.deepl_translate(
         original_text=title, target=language, lang_level="more"
     )
