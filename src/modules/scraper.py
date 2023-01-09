@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from goose3 import Goose
 from newspaper import Article
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 
 def scrape_article(url: str, config: dict):
@@ -16,6 +17,7 @@ def scrape_article(url: str, config: dict):
     return parsed_data
 
 
+@retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
 def parse_url_goose(url: str, config: dict):
     with Goose(config) as g:
         article = g.extract(url)
@@ -30,6 +32,7 @@ def parse_url_goose(url: str, config: dict):
     }
 
 
+@retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
 def parse_url_newspaper(url: str):
     article = Article(url)
     article.download()
@@ -45,6 +48,7 @@ def parse_url_newspaper(url: str):
     }
 
 
+@retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
 def manual_scraping(url: str):
     """
     Scrapes the main content from an HTML article given a URL by searching
