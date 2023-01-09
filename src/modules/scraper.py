@@ -9,16 +9,24 @@ from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 
 def scrape_article(url: str, config: dict):
+    """
+    Tries 3 methods for scraping url contents. Each time checks if
+    extraction was successful before trying the less efficient methods.
+    """
     parsed_data = parse_url_goose(url, config)
-    if not len(parsed_data["text"]) or len(parsed_data["text"]) < 100:
+    if not parsed_data["text"] or len(parsed_data["text"]) < 100:
         parsed_data = parse_url_newspaper(url)
-    if not len(parsed_data["text"]) or len(parsed_data["text"]) < 100:
+    if not parsed_data["text"] or len(parsed_data["text"]) < 100:
         parsed_data = manual_scraping(url)
     return parsed_data
 
 
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
 def parse_url_goose(url: str, config: dict):
+    """
+    Scrape url contents with goose3. This methods extracts several
+    attributes but is sensitive to website formats.
+    """
     with Goose(config) as g:
         article = g.extract(url)
     return {
@@ -34,6 +42,10 @@ def parse_url_goose(url: str, config: dict):
 
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
 def parse_url_newspaper(url: str):
+    """
+    Scrape url contents with newspaper3k. This methods gets less
+    metadata but works on more websites.
+    """
     article = Article(url)
     article.download()
     article.parse()
