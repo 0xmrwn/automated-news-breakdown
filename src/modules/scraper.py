@@ -3,9 +3,65 @@ from html import unescape
 
 import requests
 from bs4 import BeautifulSoup
+from goose3 import Goose
+from newspaper import Article
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 
-def scrape_article(url: str):
+def scrape_article(url: str, config: dict):
+    """
+    Tries 3 methods for scraping url contents. Each time checks if
+    extraction was successful before trying the less efficient methods.
+    """
+    parsed_data = parse_url_goose(url, config)
+    if not parsed_data["text"] or len(parsed_data["text"]) < 100:
+        parsed_data = parse_url_newspaper(url)
+    if not parsed_data["text"] or len(parsed_data["text"]) < 100:
+        parsed_data = manual_scraping(url)
+    return parsed_data
+
+
+@retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
+def parse_url_goose(url: str, config: dict):
+    """
+    Scrape url contents with goose3. This methods extracts several
+    attributes but is sensitive to website formats.
+    """
+    with Goose(config) as g:
+        article = g.extract(url)
+    return {
+        "title": article.title,
+        "authors": article.authors,
+        "publish_data": article.publish_date,
+        "text": article.cleaned_text,
+        "url": article.final_url,
+        "domain": article.domain,
+        "meta_description": article.meta_description,
+    }
+
+
+@retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
+def parse_url_newspaper(url: str):
+    """
+    Scrape url contents with newspaper3k. This methods gets less
+    metadata but works on more websites.
+    """
+    article = Article(url)
+    article.download()
+    article.parse()
+    return {
+        "title": article.title,
+        "authors": article.authors,
+        "publish_data": article.publish_date,
+        "text": article.text,
+        "url": url,
+        "domain": None,
+        "meta_description": None,
+    }
+
+
+@retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
+def manual_scraping(url: str):
     """
     Scrapes the main content from an HTML article given a URL by searching
     for specific class names in the page's HTML and removing certain elements
@@ -27,16 +83,16 @@ def scrape_article(url: str):
     for element in article_content(["aside", "nav"]):
         element.extract()
     raw_text = article_content.get_text().strip()
-    return clean_text(raw_text)
-
-
-def clean_text(text):
-    """
-    Cleans up raw text by removing excess whitespace, certain substrings,
-    and HTML tags, and unescaping any HTML character entities.
-    """
-    text = text.strip()
+    text = raw_text.strip()
     text = re.sub(r"\s+", " ", text)
     text = re.sub(r"TwitterFacebookEmail", "", text)
     text = re.sub(r"<.*?>", "", text)
-    return unescape(text)
+    return {
+        "title": None,
+        "authors": None,
+        "publish_data": None,
+        "text": unescape(text),
+        "url": url,
+        "domain": None,
+        "meta_description": None,
+    }
