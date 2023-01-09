@@ -16,26 +16,26 @@ These instructions will get you a copy of the project up and running on your loc
 
 To install the project, follow these steps:
 
-1. Clone the repository:
+- Clone the repository:
 
 ```bash
 git clone https://github.com/0xmrwn/automated-news-breakdown.git
 ```
 
-2. Create a **`.env`** file in the root directory of the project and add your API keys:
+- Create a **`.env`** file in the root directory of the project and add your API keys:
 
 ```tsx
 OPENAI_API_KEY=<your-openai-api-key>
 DEEPL_API_KEY=<your-deepl-api-key>
 ```
 
-3. Build the Docker image:
+- Build the Docker image:
 
 ```bash
 docker build -t auto-summary .
 ```
 
-4. Run the Docker container:
+- Run the Docker container:
 
 ```bash
 docker run -p 8080:8080 auto-summary
