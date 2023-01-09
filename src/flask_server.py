@@ -41,35 +41,31 @@ def process_url():
     # Setting configutation
     config = get_config()
     url = request.form["url"]
-    completion_model = config["openai_config"]["completions_engine"]
-    dalle_img_size = config["openai_config"]["image_size"]
-    title_config = config["openai_config"]["prompts"]["generate_title"]
-    summary_config = config["openai_config"]["prompts"]["summarize"]
-    instruction_config = config["openai_config"]["prompts"]["generate_instructions"]
+    goose_config = config["goose_config"]
+    openia_config = config["openai_config"]
     language = config["translation_target"]
 
     # Scraping article
-    text = scraper.scrape_article(url)
+    url_data = scraper.scrape_article(url, config=goose_config)
+    text = url_data["text"]
 
     # OpenAI completions
     title = interpreter.get_completion(
-        model=completion_model,
+        command="generate_title",
         context=text,
-        config=title_config,
+        config=openia_config,
     )
     summary = interpreter.get_completion(
-        model=completion_model,
+        command="summarize",
         context=text,
-        config=summary_config,
+        config=openia_config,
     )
     image_prompt = interpreter.get_completion(
-        model=completion_model,
+        command="generate_instructions",
         context=text,
-        config=instruction_config,
+        config=openia_config,
     )
-    image_url = visualizer.generate_image(
-        input_text=image_prompt, dimensions=dalle_img_size
-    )
+    image_url = visualizer.generate_image(input_text=image_prompt, config=openia_config)
 
     # Translation to target language
     translated_title = translater.deepl_translate(

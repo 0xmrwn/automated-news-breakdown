@@ -6,21 +6,18 @@ from bs4 import BeautifulSoup
 from goose3 import Goose
 from newspaper import Article
 
-from src.modules.utils import get_config
 
-
-def scrape_article(url: str):
-    parsed_data = parse_url_goose(url)
+def scrape_article(url: str, config: dict):
+    parsed_data = parse_url_goose(url, config)
     if not len(parsed_data["text"]) or len(parsed_data["text"]) < 100:
         parsed_data = parse_url_newspaper(url)
     if not len(parsed_data["text"]) or len(parsed_data["text"]) < 100:
         parsed_data = manual_scraping(url)
-    return parsed_data["text"]
+    return parsed_data
 
 
-def parse_url_goose(url: str):
-    config = get_config()
-    with Goose(config=config["goose_config"]) as g:
+def parse_url_goose(url: str, config: dict):
+    with Goose(config) as g:
         article = g.extract(url)
     return {
         "title": article.title,
