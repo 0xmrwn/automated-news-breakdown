@@ -31,7 +31,7 @@ openai_config:
       and safety of the content, and should avoid any potentially harmful or 
       triggering themes or images. The output should not contain text.
       Article : {text}"
-      max_tokens: 100
+      max_tokens: 150
       temperature: 0.1
     generate_title:
       prompt: "Generate a catchy and informative title for the following 
