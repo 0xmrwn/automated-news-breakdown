@@ -1,11 +1,11 @@
 from dotenv import load_dotenv
-from flask import Flask, request
+from flask import Flask, make_response, request
 
 from src.modules import interpreter, scraper, translater, visualizer
 from src.modules.utils import build_article, get_config
 
-app = Flask(__name__)
 load_dotenv()
+app = Flask(__name__)
 
 
 def main():
@@ -19,10 +19,9 @@ if __name__ == "__main__":
 @app.route("/", methods=["GET"])
 def index():
     """
-    Test endpoint. Returns "Server OK" when a GET request
-    is made to the `/` route.
+    Test endpoint.
     """
-    return "Server OK"
+    return make_response("", 200)
 
 
 @app.route("/process_url", methods=["POST"])
