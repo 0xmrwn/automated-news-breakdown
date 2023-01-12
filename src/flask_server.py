@@ -47,6 +47,11 @@ def process_url():
     # Scraping article
     url_data = scraper.scrape_article(url, config=goose_config)
     text = url_data["text"]
+    original_title = url_data["title"]
+    author = url_data["authors"]
+    pub_date = url_data["publish_date"]
+    source = url_data["domain"]
+    keywords = url_data["meta_description"]
 
     # OpenAI completions
     title = interpreter.get_completion(
@@ -79,5 +84,11 @@ def process_url():
             article_body=translated_text,
             image_url=image_url,
             instructions=image_prompt,
+            raw_title=original_title,
+            date=pub_date,
+            author=author,
+            keywords=keywords,
+            domain=source,
+            original_url=url,
         )
     )

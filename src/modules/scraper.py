@@ -32,7 +32,7 @@ def parse_url_goose(url: str, config: dict):
     return {
         "title": article.title,
         "authors": article.authors,
-        "publish_data": article.publish_date,
+        "publish_date": article.publish_date,
         "text": article.cleaned_text,
         "url": article.final_url,
         "domain": article.domain,
@@ -52,7 +52,7 @@ def parse_url_newspaper(url: str):
     return {
         "title": article.title,
         "authors": article.authors,
-        "publish_data": article.publish_date,
+        "publish_date": article.publish_date,
         "text": article.text,
         "url": url,
         "domain": None,
@@ -90,7 +90,7 @@ def manual_scraping(url: str):
     return {
         "title": None,
         "authors": None,
-        "publish_data": None,
+        "publish_date": None,
         "text": unescape(text),
         "url": url,
         "domain": None,
