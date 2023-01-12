@@ -13,7 +13,7 @@
       font-size: 3em;
       font-weight: 600;
       text-align: center;
-      margin: 50px 0;
+      margin: 50px 0 20px 0; 
       text-transform: capitalize;
       color:#9eb4b7;
     }}
@@ -33,7 +33,7 @@
     .container {{
       max-width: 800px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 5px 20px;
       background-color: #333333;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       border-radius: 10px;
@@ -48,9 +48,11 @@
       font-size: 1.2em;
       font-weight: 600;
       color: #9eb4b7;
+      text-align:left; 
     }}
     .metadata-item {{
       margin: 10px 0;
+      text-align:left; /* Aligns the item to left */
     }}
     .article-image {{
       width: 100%;
@@ -60,7 +62,7 @@
     }}
     .image-legend-container {{
       text-align: center;
-      margin: 20px 0;
+      margin: 20px 0 30px 0; /* added spacing between image legend and metadata */
     }}
     .image-legend {{
       font-size: 1em;
@@ -82,10 +84,13 @@
       <div class="metadata-item">Original Title: {original_title}</div>
       <div class="metadata-item">Date: {date}</div>
       <div class="metadata-item">Author: {author}</div>
-      <div class="metadata-item">Keywords: {keywords}</div>
+      <div class="metadata-item">Description: {description}</div>
       <div class="metadata-item">Source: {source}</div>
       <div class="metadata-item">Link: <a href="{link}">{link}</a></div>
     </div>
   </div>
 </body>
 </html>
+
+
+

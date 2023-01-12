@@ -51,7 +51,7 @@ def process_url():
     author = url_data["authors"]
     pub_date = url_data["publish_date"]
     source = url_data["domain"]
-    keywords = url_data["meta_description"]
+    description = url_data["meta_description"]
 
     # OpenAI completions
     title = interpreter.get_completion(
@@ -87,7 +87,7 @@ def process_url():
             raw_title=original_title,
             date=pub_date,
             author=author,
-            keywords=keywords,
+            article_description=description,
             domain=source,
             original_url=url,
         )

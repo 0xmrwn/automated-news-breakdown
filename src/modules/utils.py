@@ -22,7 +22,7 @@ def build_article(
     raw_title,
     date,
     author,
-    keywords,
+    article_description,
     domain,
     original_url,
 ):
@@ -41,7 +41,7 @@ def build_article(
         original_title=raw_title,
         date=date,
         author=author,
-        keywords=keywords,
+        description=article_description,
         source=domain,
         link=original_url,
     )
