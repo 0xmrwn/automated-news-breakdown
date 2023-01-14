@@ -1,7 +1,14 @@
+import logging
 import os
 
 import openai
 from tenacity import retry, stop_after_attempt, wait_random_exponential
+
+logging.basicConfig(
+    level=logging.INFO,
+    format=f'[%(asctime)s] [%(process)d] [%(levelname)s] [{os.path.basename(__file__).split(".")[0]}] %(message)s',
+    datefmt="%Y-%m-%d %H:%M:%S %z",
+)
 
 
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
@@ -15,6 +22,7 @@ def get_completion(command: str, context: str, config: dict):
     completion. The function returns the generated completion as a string.
     """
     openai.api_key = os.environ["OPENAI_API_KEY"]
+    logging.info(f"Requesting OpenAI for {command}")
     model = config["completions_engine"]
     template_prompt, max_t, temp = (
         config["prompts"][command]["prompt"],
@@ -30,5 +38,10 @@ def get_completion(command: str, context: str, config: dict):
         temperature=temp,
         top_p=1,
     )
-    completion = completions.choices[0]
-    return completion.text
+    top_completion = completions.choices[0]
+    usage = completions["usage"]
+    logging.info("Completion status: Success")
+    logging.info(f"Usage: {usage['total_tokens']} tokens")
+    logging.info(f"Prompt: {usage['prompt_tokens']} tokens")
+    logging.info(f"Completion: {usage['completion_tokens']} tokens")
+    return top_completion.text

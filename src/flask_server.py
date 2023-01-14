@@ -54,19 +54,19 @@ def process_url():
     description = url_data["meta_description"]
 
     # OpenAI completions
-    title = interpreter.get_completion(
-        command="generate_title",
-        context=text,
-        config=openia_config,
-    )
     summary = interpreter.get_completion(
         command="summarize",
         context=text,
         config=openia_config,
     )
+    title = interpreter.get_completion(
+        command="generate_title",
+        context=summary,
+        config=openia_config,
+    )
     image_prompt = interpreter.get_completion(
         command="generate_instructions",
-        context=text,
+        context=summary,
         config=openia_config,
     )
     image_url = visualizer.generate_image(input_text=image_prompt, config=openia_config)
