@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <title>{title}</title>
+  <meta charset="utf-8">
+  <style>
+    body {{
+      background-color: #222222;
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+    }}
+    h1 {{
+      font-size: 3em;
+      font-weight: 600;
+      text-align: center;
+      margin: 50px 0 20px 0; 
+      text-transform: capitalize;
+      color:#9eb4b7;
+    }}
+    img {{
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      width:100%;
+      height:auto;
+    }}
+    p {{
+      font-size: 1.2em;
+      line-height: 1.5;
+      margin: 40px 0 20px 0;
+      text-align: justify;
+    }}
+    .container {{
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 5px 20px;
+      background-color: #333333;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }}
+    .article-metadata {{
+      margin: 30px 0;
+      padding: 20px;
+      background-color: #444444;
+      border-radius: 10px;
+    }}
+    .metadata-title {{
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #9eb4b7;
+      text-align:left; 
+    }}
+    .metadata-item {{
+      margin: 10px 0;
+      text-align:left; /* Aligns the item to left */
+    }}
+    .article-image {{
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }}
+    .image-legend-container {{
+      text-align: center;
+      margin: 20px 0 30px 0; /* added spacing between image legend and metadata */
+    }}
+    .image-legend {{
+      font-size: 1em;
+      font-style: italic;
+      color: #999999;
+    }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>{title}</h1>
+    <img class="article-image" src="{url}" alt="{prompt}">
+    <div class="image-legend-container">
+      <p class="image-legend">{image_legend}</p>
+    </div>
+    <p>{text}</p>
+    <div class="article-metadata">
+      <div class="metadata-title">Article Metadata</div>
+      <div class="metadata-item">Original Title: {original_title}</div>
+      <div class="metadata-item">Date: {date}</div>
+      <div class="metadata-item">Author: {author}</div>
+      <div class="metadata-item">Description: {description}</div>
+      <div class="metadata-item">Source: {source}</div>
+      <div class="metadata-item">Link: <a href="{link}">{link}</a></div>
+    </div>
+  </div>
+</body>
+</html>
+
+
+

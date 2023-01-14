@@ -1,11 +1,11 @@
 from dotenv import load_dotenv
-from flask import Flask, request
+from flask import Flask, make_response, request
 
 from src.modules import interpreter, scraper, translater, visualizer
 from src.modules.utils import build_article, get_config
 
-app = Flask(__name__)
 load_dotenv()
+app = Flask(__name__)
 
 
 def main():
@@ -19,10 +19,9 @@ if __name__ == "__main__":
 @app.route("/", methods=["GET"])
 def index():
     """
-    Test endpoint. Returns "Server OK" when a GET request
-    is made to the `/` route.
+    Test endpoint.
     """
-    return "Server OK"
+    return make_response("", 200)
 
 
 @app.route("/process_url", methods=["POST"])
@@ -48,21 +47,26 @@ def process_url():
     # Scraping article
     url_data = scraper.scrape_article(url, config=goose_config)
     text = url_data["text"]
+    original_title = url_data["title"]
+    author = url_data["authors"]
+    pub_date = url_data["publish_date"]
+    source = url_data["domain"]
+    description = url_data["meta_description"]
 
     # OpenAI completions
-    title = interpreter.get_completion(
-        command="generate_title",
-        context=text,
-        config=openia_config,
-    )
     summary = interpreter.get_completion(
         command="summarize",
         context=text,
         config=openia_config,
     )
+    title = interpreter.get_completion(
+        command="generate_title",
+        context=summary,
+        config=openia_config,
+    )
     image_prompt = interpreter.get_completion(
         command="generate_instructions",
-        context=text,
+        context=summary,
         config=openia_config,
     )
     image_url = visualizer.generate_image(input_text=image_prompt, config=openia_config)
@@ -80,5 +84,11 @@ def process_url():
             article_body=translated_text,
             image_url=image_url,
             instructions=image_prompt,
+            raw_title=original_title,
+            date=pub_date,
+            author=author,
+            article_description=description,
+            domain=source,
+            original_url=url,
         )
     )

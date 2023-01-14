@@ -14,12 +14,23 @@ def create_file_name(item: str, file_type: str):
     return f"./output/{item}_{date_time_str}.{file_type}"
 
 
-def build_article(article_title, article_body, image_url, instructions):
+def build_article(
+    article_title,
+    article_body,
+    image_url,
+    instructions,
+    raw_title,
+    date,
+    author,
+    article_description,
+    domain,
+    original_url,
+):
     """
     Builds an HTML article using a template file and the provided title,
     text, image path, instructions for image generation, and image data.
     """
-    with open(path.join(".", "data", "template.html"), "r") as template_file:
+    with open(path.join(".", "templates", "template.html"), "r") as template_file:
         template = template_file.read()
     return template.format(
         title=article_title,
@@ -27,6 +38,12 @@ def build_article(article_title, article_body, image_url, instructions):
         url=image_url,
         prompt=instructions,
         image_legend=instructions,
+        original_title=raw_title,
+        date=date,
+        author=author,
+        description=article_description,
+        source=domain,
+        link=original_url,
     )
 
 

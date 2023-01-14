@@ -1,3 +1,5 @@
+import logging
+import os
 import re
 from html import unescape
 
@@ -7,6 +9,12 @@ from goose3 import Goose
 from newspaper import Article
 from tenacity import retry, stop_after_attempt, wait_random_exponential
 
+logging.basicConfig(
+    level=logging.INFO,
+    format=f'[%(asctime)s] [%(process)d] [%(levelname)s] [{os.path.basename(__file__).split(".")[0]}] %(message)s',
+    datefmt="%Y-%m-%d %H:%M:%S %z",
+)
+
 
 def scrape_article(url: str, config: dict):
     """
@@ -15,9 +23,13 @@ def scrape_article(url: str, config: dict):
     """
     parsed_data = parse_url_goose(url, config)
     if not parsed_data["text"] or len(parsed_data["text"]) < 100:
+        logging.warning("Text contents not located with Goose3")
         parsed_data = parse_url_newspaper(url)
     if not parsed_data["text"] or len(parsed_data["text"]) < 100:
+        logging.warning("Text contents not located with Newspaper3k")
         parsed_data = manual_scraping(url)
+    content_len = len(str(parsed_data["text"]).split())
+    logging.info(f"Extracted {content_len} tokens from URL")
     return parsed_data
 
 
@@ -27,12 +39,13 @@ def parse_url_goose(url: str, config: dict):
     Scrape url contents with goose3. This methods extracts several
     attributes but is sensitive to website formats.
     """
+    logging.info("Scraping URL contents with Goose3")
     with Goose(config) as g:
         article = g.extract(url)
     return {
         "title": article.title,
         "authors": article.authors,
-        "publish_data": article.publish_date,
+        "publish_date": article.publish_date,
         "text": article.cleaned_text,
         "url": article.final_url,
         "domain": article.domain,
@@ -46,13 +59,14 @@ def parse_url_newspaper(url: str):
     Scrape url contents with newspaper3k. This methods gets less
     metadata but works on more websites.
     """
+    logging.info("Scraping URL contents with Newspaper3k")
     article = Article(url)
     article.download()
     article.parse()
     return {
         "title": article.title,
         "authors": article.authors,
-        "publish_data": article.publish_date,
+        "publish_date": article.publish_date,
         "text": article.text,
         "url": url,
         "domain": None,
@@ -67,6 +81,7 @@ def manual_scraping(url: str):
     for specific class names in the page's HTML and removing certain elements
     from the content. Returns the cleaned up text of the article's main content.
     """
+    logging.info("Scraping URL contents with BeautifulSoup")
     try:
         response = requests.get(url)
     except requests.exceptions.RequestException as e:
@@ -90,7 +105,7 @@ def manual_scraping(url: str):
     return {
         "title": None,
         "authors": None,
-        "publish_data": None,
+        "publish_date": None,
         "text": unescape(text),
         "url": url,
         "domain": None,
