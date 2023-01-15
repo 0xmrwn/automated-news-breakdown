@@ -6,9 +6,10 @@ from deep_translator import GoogleTranslator
 
 logging.basicConfig(
     level=logging.INFO,
-    format=f'[%(asctime)s] [%(process)d] [%(levelname)s] [{os.path.basename(__file__).split(".")[0]}] %(message)s',
+    format="[%(asctime)s] [%(process)d] [%(levelname)s] [%(filename)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S %z",
 )
+logging.getLogger("deepl").setLevel(logging.WARNING)
 
 
 def deepl_translate(original_text: str, target: str, lang_level: str):
