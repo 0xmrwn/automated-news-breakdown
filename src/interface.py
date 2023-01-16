@@ -5,7 +5,9 @@ import customtkinter
 
 from modules import scraper, utils
 
-customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_appearance_mode(
+    "System"
+)  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme(
     "dark-blue"
 )  # Themes: "blue" (standard), "green", "dark-blue"
@@ -153,7 +155,9 @@ class App(customtkinter.CTk):
         self.checkbox_slider_frame.grid(
             row=1, column=3, padx=(20, 20), pady=(20, 0), sticky="nsew"
         )
-        self.checkbox_1 = customtkinter.CTkCheckBox(master=self.checkbox_slider_frame)
+        self.checkbox_1 = customtkinter.CTkCheckBox(
+            master=self.checkbox_slider_frame, text="Generate Image"
+        )
         self.checkbox_1.grid(row=1, column=0, pady=(20, 10), padx=20, sticky="n")
         self.checkbox_2 = customtkinter.CTkCheckBox(master=self.checkbox_slider_frame)
         self.checkbox_2.grid(row=2, column=0, pady=10, padx=20, sticky="n")
@@ -167,11 +171,11 @@ class App(customtkinter.CTk):
         # create slider and progressbar frame
 
         # set default values
-        self.checkbox_2.configure(state="disabled")
-        self.switch_2.configure(state="disabled")
+        self.checkbox_2.configure()
+        self.switch_2.configure()
         self.checkbox_1.select()
         self.switch_1.select()
-        self.radio_button_3.configure(state="disabled")
+        self.radio_button_3.configure()
         self.appearance_mode_optionemenu.set("Dark")
         self.scaling_optionemenu.set("100%")
         self.optionmenu_1.set("CTkOptionmenu")
