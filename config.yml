@@ -1,15 +1,13 @@
 version: 1
 
-translation_target: "FR"
-
-goose_config:
+goose:
   browser_user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2)"
   enable_image_fetching: False
   keep_footnotes: True
   parse_headers: True
   strict: True
 
-openai_config:
+openai:
   image_size: "512x512"
   completions_engine: "text-davinci-003"
   prompts:
@@ -40,3 +38,8 @@ openai_config:
       Summary : {text}"
       max_tokens: 20
       temperature: 0.7
+
+translation:
+  state: False
+  client: "deepl"
+  translation_target: "FR"
