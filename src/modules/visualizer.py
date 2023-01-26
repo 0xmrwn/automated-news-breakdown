@@ -7,9 +7,10 @@ import requests
 
 logging.basicConfig(
     level=logging.INFO,
-    format=f'[%(asctime)s] [%(process)d] [%(levelname)s] [{os.path.basename(__file__).split(".")[0]}] %(message)s',
+    format="[%(asctime)s] [%(process)d] [%(levelname)s] [%(filename)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S %z",
 )
+logging.getLogger("openai").setLevel(logging.WARNING)
 
 
 def create_file_name(item: str, file_type: str):

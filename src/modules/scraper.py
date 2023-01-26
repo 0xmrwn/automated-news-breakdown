@@ -1,5 +1,4 @@
 import logging
-import os
 import re
 from html import unescape
 
@@ -11,9 +10,19 @@ from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 logging.basicConfig(
     level=logging.INFO,
-    format=f'[%(asctime)s] [%(process)d] [%(levelname)s] [{os.path.basename(__file__).split(".")[0]}] %(message)s',
+    format="[%(asctime)s] [%(process)d] [%(levelname)s] [%(filename)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S %z",
 )
+
+
+def is_valid_url(url):
+    user_agent = "Mozilla/5.0 (Windows NT 10.0;Win64) AppleWebkit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36"
+    header = {"User-Agent": user_agent}
+    try:
+        return requests.get(url, headers=header).status_code == 200
+    except requests.exceptions.MissingSchema as e:
+        logging.warning(e)
+        return False
 
 
 def scrape_article(url: str, config: dict):
@@ -21,6 +30,8 @@ def scrape_article(url: str, config: dict):
     Tries 3 methods for scraping url contents. Each time checks if
     extraction was successful before trying the less efficient methods.
     """
+    if not is_valid_url(url):
+        return False
     parsed_data = parse_url_goose(url, config)
     if not parsed_data["text"] or len(parsed_data["text"]) < 100:
         logging.warning("Text contents not located with Goose3")
@@ -89,7 +100,7 @@ def manual_scraping(url: str):
         return None
     soup = BeautifulSoup(response.text, "html.parser")
     article_content = None
-    for element in ["article-body", "article-text", "articleBody"]:
+    for element in ["article-body", "article-text", "articleBody", "p"]:
         article_content = soup.find(class_=element)
         if article_content:
             break

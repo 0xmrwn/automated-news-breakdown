@@ -40,12 +40,14 @@ def process_url():
     # Setting configutation
     config = get_config()
     url = request.form["url"]
-    goose_config = config["goose_config"]
-    openia_config = config["openai_config"]
-    language = config["translation_target"]
+    goose_config = config["goose"]
+    openai_config = config["openai"]
+    translation = config["translation"]
 
     # Scraping article
     url_data = scraper.scrape_article(url, config=goose_config)
+    if not url_data:
+        return "Error while scraping"
     text = url_data["text"]
     original_title = url_data["title"]
     author = url_data["authors"]
@@ -57,31 +59,34 @@ def process_url():
     summary = interpreter.get_completion(
         command="summarize",
         context=text,
-        config=openia_config,
+        config=openai_config,
     )
     title = interpreter.get_completion(
         command="generate_title",
         context=summary,
-        config=openia_config,
+        config=openai_config,
     )
     image_prompt = interpreter.get_completion(
         command="generate_instructions",
         context=summary,
-        config=openia_config,
+        config=openai_config,
     )
-    image_url = visualizer.generate_image(input_text=image_prompt, config=openia_config)
+    image_url = visualizer.generate_image(input_text=image_prompt, config=openai_config)
 
     # Translation to target language
-    translated_title = translater.deepl_translate(
-        original_text=title, target=language, lang_level="more"
-    )
-    translated_text = translater.deepl_translate(
-        original_text=summary, target=language, lang_level="more"
-    )
+    state = translation["state"]
+    if state:
+        language = translation["translation_target"]
+        title = translater.deepl_translate(
+            original_text=title, target=language, lang_level="more"
+        )
+        summary = translater.deepl_translate(
+            original_text=summary, target=language, lang_level="more"
+        )
     return str(
         build_article(
-            article_title=translated_title,
-            article_body=translated_text,
+            article_title=title,
+            article_body=summary,
             image_url=image_url,
             instructions=image_prompt,
             raw_title=original_title,
