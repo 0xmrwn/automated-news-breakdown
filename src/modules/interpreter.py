@@ -41,8 +41,7 @@ def get_completion(command: str, context: str, config: dict):
     )
     top_completion = completions.choices[0]
     usage = completions["usage"]
-    logging.info("Completion status: Success")
-    logging.info(f"Usage: {usage['total_tokens']} tokens")
+    logging.info(f"Total usage: {usage['total_tokens']} tokens")
     logging.info(f"Prompt: {usage['prompt_tokens']} tokens")
     logging.info(f"Completion: {usage['completion_tokens']} tokens")
     return top_completion.text

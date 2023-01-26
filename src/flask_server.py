@@ -46,6 +46,8 @@ def process_url():
 
     # Scraping article
     url_data = scraper.scrape_article(url, config=goose_config)
+    if not url_data:
+        return "Error while scraping"
     text = url_data["text"]
     original_title = url_data["title"]
     author = url_data["authors"]
