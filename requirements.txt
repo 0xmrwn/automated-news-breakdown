@@ -1,4 +1,4 @@
-beautifulsoup4==4.11.1
+beautifulsoup4==4.12.2
 customtkinter==5.0.5
 deep_translator==1.9.2
 deepl==1.14.0
