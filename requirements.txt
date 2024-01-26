@@ -1,5 +1,5 @@
 beautifulsoup4==4.11.1
-customtkinter==5.0.5
+customtkinter==5.2.2
 deep_translator==1.9.2
 deepl==1.14.0
 flask==2.2.2
